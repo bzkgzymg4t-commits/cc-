@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>写给我的留言墙 💌</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        pink:    '#FFD6E0',
+        mint:    '#D4F5E4',
+        lemon:   '#FFF4B8',
+        sky:     '#D6EEFF',
+        peach:   '#FFE0CC',
+        grape:   '#E4D4FF',
+        coral:   '#FFB5A7',
+        butter:  '#FFE9A8',
+      },
+      fontFamily: {
+        cute: ['"Comic Sans MS"', '"Chalkboard SE"', '"Nunito"', 'system-ui', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+<style type="text/tailwindcss">
+@layer utilities {
+  .macaron-bg {
+    background: linear-gradient(135deg, #FFD6E0 0%, #D4F5E4 25%, #FFF4B8 50%, #D6EEFF 75%, #E4D4FF 100%);
+    background-size: 300% 300%;
+    animation: macaronMove 18s ease infinite;
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(14px);
+    border: 2px solid rgba(255, 255, 255, 0.7);
+  }
+  .bubble {
+    border-radius: 24px;
+  }
+  .title-shadow {
+    text-shadow: 2px 2px 0 #fff, 4px 4px 12px rgba(255,182,193,0.45);
+  }
+}
+
+@keyframes macaronMove {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.heart {
+  position: fixed;
+  bottom: -40px;
+  font-size: 18px;
+  opacity: 0.55;
+  animation: floatUp linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes floatUp {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.5; }
+  100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+}
+
+.sticker {
+  display: inline-block;
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 14px;
+  box-shadow: 0 6px 18px rgba(255, 182, 193, 0.35);
+}
+</style>
+</head>
+
+<body class="min-h-screen macaron-bg p-4 md:p-7 font-cute overflow-x-hidden">
+<div id="floatingItems" class="fixed inset-0 pointer-events-none z-0"></div>
+<div class="max-w-2xl mx-auto relative z-10">
+  <div class="glass-card bubble p-6 md:p-8 shadow-xl mb-7">
+    <h1 class="text-[clamp(1.9rem,5vw,2.6rem)] font-extrabold text-center mb-4 title-shadow"
+        style="color:#FF7AA2;">
+      💌 写给我的留言墙 💌
+    </h1>
+    <p class="text-gray-700 text-[17px] md:text-lg leading-relaxed text-center">
+      人和人的连接都很奇妙且值得珍惜 🌷
+    </p>
+    <p class="text-gray-700 text-[17px] md:text-lg leading-relaxed text-center mt-2">
+      所以想听听大家对我的祝福、看法，或者想送给我的话。
+    </p>
+    <p class="text-center mt-3 text-[16px] font-semibold" style="color:#FF8FB1;">
+      好的坏的都可以，我都认真接住 · ˚₊‧꒰ˆ ◡̈ˆ ꒱‧₊˚
+    </p>
+    <div class="flex flex-wrap justify-center gap-2 mt-5">
+      <span class="sticker text-sm" style="color:#FF7AA2;">♡ 欢迎留言</span>
+      <span class="sticker text-sm" style="color:#7EC8A3;">♡ 匿名也可以</span>
+      <span class="sticker text-sm" style="color:#8FB8DE;">♡ 放心写下</span>
+    </div>
+  </div>
+
+  <div class="glass-card bubble p-6 shadow-xl mb-7">
+    <h2 class="text-xl font-bold mb-4" style="color:#FF7AA2;">
+      ✎ 写下你想对我说的话 · ᵕ̈
+    </h2>
+    <div class="mb-4">
+      <label class="block text-gray-700 mb-2" style="color:#FF8FB1;">
+        你的名字 · ˘͈ᵕ˘͈
+      </label>
+      <input id="msgName" type="text" maxlength="20"
+        class="w-full rounded-2xl p-3 outline-none border-2 border-white focus:border-pink"
+        style="background:rgba(255,255,255,0.85);"
+        placeholder="写下你的名字吧..." />
+    </div>
+    <textarea id="msgContent"
+      class="w-full rounded-2xl p-4 outline-none border-2 border-white focus:border-pink resize-none"
+      style="background:rgba(255,255,255,0.85); min-height:130px;"
+      placeholder="写下你想对我说的话... (｡･ω･｡)"></textarea>
+    <div class="mt-4 flex flex-wrap gap-4 items-center text-gray-700">
+      <label class="flex items-center gap-2 cursor-pointer">
+        <input type="checkbox" id="isAnonymous" class="w-4 h-4 accent-pink" />
+        <span>匿名留言 · ˘͈ᵕ˘͈</span>
+      </label>
+      <div class="flex gap-3">
+        <label class="flex items-center gap-1 cursor-pointer">
+          <input type="radio" name="seeType" value="public" checked class="accent-pink" />
+          <span>所有人看 · 大家都能看见</span>
+        </label>
+        <label class="flex items-center gap-1 cursor-pointer">
+          <input type="radio" name="seeType" value="onlyMe" class="accent-pink" />
+          <span>只给我看 · 悄悄说</span>
+        </label>
+      </div>
+    </div>
+    <button onclick="addMessage()"
+      class="mt-5 w-full py-3 rounded-2xl font-bold text-white transition hover:scale-[1.03] active:scale-[0.97]"
+      style="background:linear-gradient(135deg,#FFB5A7,#FFD6E0); box-shadow:0 10px 24px rgba(255,181,167,0.45);">
+      提交留言 💗
+    </button>
+  </div>
+
+  <div class="glass-card bubble p-6 shadow-xl">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl font-bold" style="color:#7EC8A3;">大家的留言 · ˚₊‧꒰ ᐡ ᐡ ꒱‧₊˚</h2>
+      <button onclick="showPasswordInput()" class="text-sm px-3 py-1 rounded-full bg-pink text-white">查看私密留言</button>
+    </div>
+    <div id="passwordBox" class="hidden mb-4">
+      <input id="pwdInput" type="password" placeholder="输入主人密码" class="p-2 rounded-xl border">
+      <button onclick="checkPwd()" class="ml-2 p-2 rounded-xl bg-mint">确认</button>
+    </div>
+    <div id="msgList" class="space-y-4"></div>
+    <div id="emptyTip" class="text-center text-gray-500 py-10">还没有留言，来做第一个写下的人吧 ✨</div>
+  </div>
+</div>
+
+<script>
+// ========= 配置信息（已填好，不用改） =========
+const MASTER_KEY = "$2a$10$qIUqjD2dQbTrxUJohyBUp.IDFUkYVT1zhKt4ml2o8i/bOb/vxky6q";
+const BIN_ID = "6abaae9cffd5d160533889f0";
+const OWNER_PASSWORD = "123456";
+// ======================================
+let showSecret = false;
+
+// 读取留言
+async function loadMessages() {
+  try{
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`,{
+      headers: { "X-Master-Key": MASTER_KEY }
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    const list = (json.record && json.record.list) || [];
+    renderMsg(list);
+  }catch(err){
+    alert("读取留言失败，请确认：①Bin初始内容是否写了 {\"list\":[]}；②网页是否已托管（不能本地双击打开）");
+    console.error(err);
+  }
+}
+
+// 保存留言
+async function addMessage() {
+  const name = document.getElementById('msgName').value.trim();
+  const content = document.getElementById('msgContent').value.trim();
+  const isAnonymous = document.getElementById('isAnonymous').checked;
+  const seeType = document.querySelector('input[name="seeType"]:checked').value;
+  if (!content) {
+    alert("写点内容再提交哦，空空的话我会有点孤单 ·˚ ༘ ♡ ⋆｡˚");
+    return;
+  }
+  const newMsg = {name, content, isAnonymous, seeType, time: new Date().toLocaleString()};
+
+  try {
+    const getRes = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`,{
+      headers: { "X-Master-Key": MASTER_KEY }
+    });
+    const getJson = await getRes.json();
+    let list = (getJson.record && getJson.record.list) || [];
+    list.push(newMsg);
+
+    await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`,{
+      method: "PUT",
+      headers: {
+        "X-Master-Key": MASTER_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({list: list})
+    });
+
+    document.getElementById('msgName').value = "";
+    document.getElementById('msgContent').value = "";
+    alert("留言收到啦，谢谢你愿意写给我 (｡･ω･｡)ﾉ♡");
+    createHeart();
+    loadMessages();
+  } catch(err) {
+    alert("提交失败，请检查网络或jsonbin限流（免费版每分钟最多10次请求）");
+    console.error(err);
+  }
+}
+
+function renderMsg(msgList) {
+  const box = document.getElementById('msgList');
+  const emptyTip = document.getElementById('emptyTip');
+  box.innerHTML = "";
+  if (msgList.length === 0) {
+    emptyTip.style.display = 'block';
+  } else {
+    emptyTip.style.display = 'none';
+  }
+  const colorList = [
+    'border-pink bg-white/70',
+    'border-mint bg-white/70',
+    'border-lemon bg-white/70',
+    'border-sky bg-white/70',
+    'border-peach bg-white/70',
+    'border-grape bg-white/70',
+  ];
+  msgList.forEach(item => {
+    const randomColor = colorList[Math.floor(Math.random() * colorList.length)];
+    const name = item.isAnonymous ? "匿名朋友 (｡･ω･｡)" : (item.name || "没有名字的小朋友");
+    if(item.seeType === 'onlyMe' && !showSecret){
+      box.innerHTML += `
+        <div class="msg-card p-4 rounded-2xl border-2 ${randomColor}">
+          <p class="text-gray-500 italic">🔒 这条留言仅主人可以查看</p>
+        </div>`;
+    } else {
+      box.innerHTML += `
+        <div class="msg-card p-4 rounded-2xl border-2 ${randomColor}">
+          <div class="font-bold mb-2" style="color:#FF7AA2;">${name}</div>
+          <p class="text-gray-700 leading-relaxed whitespace-pre-wrap">${item.content}</p>
+          <div class="mt-2 text-xs text-gray-500">${item.time}</div>
+        </div>`;
+    }
+  });
+}
+
+function showPasswordInput(){
+  document.getElementById("passwordBox").classList.toggle('hidden');
+}
+function checkPwd(){
+  const inputPwd = document.getElementById("pwdInput").value.trim();
+  if(inputPwd === OWNER_PASSWORD){
+    showSecret = true;
+    loadMessages();
+    alert("密码正确，可以查看私密留言啦 ✅");
+  } else {
+    alert("密码错误❌");
+  }
+}
+
+function createHeart() {
+  const container = document.getElementById('floatingItems');
+  const heart = document.createElement('div');
+  heart.classList.add('heart');
+  const marks = ['❤', '♡', '✿', '☁', '✧', '🌷', '🍰', '🎀'];
+  heart.innerHTML = marks[Math.floor(Math.random() * marks.length)];
+  heart.style.left = Math.random() * 100 + 'vw';
+  heart.style.fontSize = (Math.random() * 16 + 14) + 'px';
+  heart.style.animationDuration = (Math.random() * 6 + 7) + 's';
+  const colors = ['#FF7AA2', '#FFB5A7', '#7EC8A3', '#8FB8DE', '#B9A7E0', '#F5C26B'];
+  heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+  container.appendChild(heart);
+  setTimeout(() => heart.remove(), 14000);
+}
+setInterval(createHeart, 1400);
+loadMessages();
+</script>
+
+</body>
+</html>
